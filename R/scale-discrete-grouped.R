@@ -37,7 +37,7 @@ scale_x_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0
 
 #' @rdname scale_x_grouped_discrete
 #' @export
-scale_y_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(), guide = waiver(), position = "left") {
+scale_y_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(), guide = waiver(), position = "left") {
   sc <- discrete_scale(c("y", "ymin", "ymax", "yend"), "position_d", identity, ...,
                        expand = expand, guide = guide, position = position, super = ScaleGroupedDiscretePosition)
 

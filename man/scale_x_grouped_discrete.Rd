@@ -2,7 +2,7 @@
 % Please edit documentation in R/scale-discrete-grouped.R
 \name{scale_x_grouped_discrete}
 \alias{scale_x_grouped_discrete}
-\alias{scale_y_discrete}
+\alias{scale_y_grouped_discrete}
 \title{A modified discrete scale that inserts a gap between groups}
 \usage{
 scale_x_grouped_discrete(
@@ -14,7 +14,7 @@ scale_x_grouped_discrete(
   position = "bottom"
 )
 
-scale_y_discrete(
+scale_y_grouped_discrete(
   ...,
   grouping = function(x) 1,
   gap_size = 0.3,

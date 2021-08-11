@@ -3,7 +3,7 @@
 S3method(length,grouped_limits)
 export(ScaleGroupedDiscretePosition)
 export(scale_x_grouped_discrete)
-export(scale_y_discrete)
+export(scale_y_grouped_discrete)
 import(ggplot2)
 import(rlang)
 import(scales)
