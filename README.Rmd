@@ -42,11 +42,39 @@ ggplot(penguins,
   geom_boxplot() +
   scale_x_grouped_discrete(grouping = function(x){
     sapply(strsplit(x, split = "-"), function(.x) .x[1])
-  }, gap_size = 1)
+  }, gap_size = 1, add_group_label = TRUE)
+
+```
+
+Setting `add_group_label = FALSE` suppresses the additional labels
+
+```{r}
+ggplot(penguins, 
+       aes(x = paste0(island, "-", species), y = bill_length_mm)) +
+  geom_boxplot() +
+  scale_x_grouped_discrete(grouping = function(x){
+    sapply(strsplit(x, split = "-"), function(.x) .x[1])
+  }, gap_size = 1, add_group_label = FALSE)
 
 ```
 
 
 
-Note that this is not a polished package. But it seems to get the job done, so it's good enough for me. I am currently not planning to submit to CRAN and it should probably be rather added to one of the existing ggplot extension packages that provide custom scales.
+You can also define the grouping using a regular vector or a formula style function
+
+```{r}
+ggplot(penguins, aes(x = paste0(island, "-", species), y = bill_length_mm)) +
+  geom_boxplot() +
+  scale_x_grouped_discrete(grouping = c("A", "B", "A", "B", "C"), add_group_label = TRUE)
+
+ggplot(penguins, aes(x = paste0(island, "-", species), y = bill_length_mm)) +
+  geom_boxplot() +
+  scale_x_grouped_discrete(grouping = ~ stringr::str_split_fixed(.x, "-", n=2)[,2], 
+                           gap_size = 1, add_group_label = TRUE)
+```
+
+
+# Disclaimer
+
+Note that this is not a polished package. For example, the package uses internal functions from `ggplot2` and has a hack to extend the range, so it might break with any new release of `ggplot2`. However, it seems to get the job done, so it's good enough for me. I am currently not planning to submit to CRAN and it should probably be rather added to one of the existing ggplot extension packages that provide custom scales.
 

@@ -21,10 +21,17 @@ NULL
 #' @param grouping a function that gets the names of the discrete elements
 #'   and returns the corresponding grouping
 #' @param gap_size the gap between the groups
+#' @param add_group_label boolean whether the group is added as an extra line
+#'   below the axis labels
 #'
 #'
 #' @export
-scale_x_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(), guide = waiver(), position = "bottom") {
+scale_x_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(), guide = waiver(), position = "bottom", add_group_label = FALSE) {
+
+  if(add_group_label && inherits(guide, "waiver")){
+    guide <- guide_grouped_axis()
+  }
+
   sc <- discrete_scale(c("x", "xmin", "xmax", "xend"), "position_d", identity, ...,
                        expand = expand, guide = guide, position = position, super = ScaleGroupedDiscretePosition)
 
@@ -32,7 +39,11 @@ scale_x_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0
   sc$grouping <- grouping
   sc$gap_size <- gap_size
 
-  sc
+  if(add_group_label && inherits(guide, "waiver")){
+    list(sc, theme_grouped_axis())
+  }else{
+    sc
+  }
 }
 
 #' @rdname scale_x_grouped_discrete
@@ -79,17 +90,22 @@ ScaleGroupedDiscretePosition <- ggproto("ScaleGroupedDiscretePosition", ScaleDis
     }
     # browser()
 
-    groups <- self$grouping(limits)
+    groups <- if(is.vector(self$grouping)){
+      rep_len(self$grouping, length(limits))
+    }else{
+      as_function(self$grouping)(limits)
+    }
     stopifnot(length(groups) == 1 || length(groups) == length(limits))
     num_groups <- as.numeric(as.factor(rep_len(groups, length(limits))))
 
     limits <- limits[order(num_groups)]
+    group_names <- unique(groups[order(num_groups)])
     num_groups <- sort(num_groups)
     # The trick is that expand_limits_discrete_trans uses
     # length(limits) to figure out how wide the plot should be
     # https://github.com/tidyverse/ggplot2/blob/1a72f581ce651b36c16cb2dd3c7ab0463ae7a188/R/scale-expansion.r#L204
     # I hack the length function to incorporate the information about the gap_size
-    new_grouped_limits(limits, num_groups, self$gap_size)
+    new_grouped_limits(limits, num_groups, group_names, self$gap_size)
   },
 
   is_empty = function(self) {
@@ -102,17 +118,21 @@ ScaleGroupedDiscretePosition <- ggproto("ScaleGroupedDiscretePosition", ScaleDis
   },
 
   map = function(self, x, limits = self$get_limits()) {
-    if (is.discrete(x)) {
-      groups <- if(is.null(attr(limits, "group"))){
-        rep(1, length(limits))
-      }else{
-        attr(limits, "group")
-      }
+    groups <- if(is.null(attr(limits, "group"))){
+      rep(1, length(limits))
+    }else{
+      attr(limits, "group")
+    }
+    group_names <- if(is.null(attr(limits, "group_names"))){
+      seq_len(length(unique(unique(groups))))
+    }else{
+      attr(limits, "group_names")
+    }
+    if(is.discrete(x)){
       extra_gap <- cumsum(c(0, diff(groups)) * self$gap_size)
-
       x <- (seq_along(unclass(limits)) + extra_gap)[match(as.character(x), limits)]
     }
-    new_mapped_discrete(x)
+    new_grouped_mapped_discrete(x, groups, group_names)
   },
 
   rescale = function(self, x, limits = self$get_limits(), range = self$dimension(limits = limits)) {
@@ -140,39 +160,37 @@ is.discrete <- function (x) {
 
 
 # TODO: This is a clear candidate for vctrs once we adopt it
-new_mapped_discrete <- function(x) {
+new_grouped_mapped_discrete <- function(x, groups, group_names) {
   if (is.null(x)) {
     return(x)
   }
   if (!is.numeric(x)) {
     abort("`mapped_discrete` objects can only be created from numeric vectors")
   }
-  class(x) <- c("mapped_discrete", "numeric")
-  x
-}
-is_mapped_discrete <- function(x) inherits(x, "mapped_discrete")
-
-
-
-new_mapped_discrete <- function(x) {
-  if (is.null(x)) {
-    return(x)
-  }
-  if (!is.numeric(x)) {
-    abort("`mapped_discrete` objects can only be created from numeric vectors")
-  }
-  class(x) <- c("mapped_discrete", "numeric")
+  stopifnot(max(groups) == length(group_names))
+  attr(x, "groups") <- groups
+  attr(x, "group_names") <- group_names
+  class(x) <- c("groupedmapped_discrete", "mapped_discrete", "numeric")
   x
 }
 
-new_grouped_limits <- function(x, group, gap_size) {
+
+
+# is_mapped_discrete <- function(x) inherits(x, "mapped_discrete")
+
+
+
+
+new_grouped_limits <- function(x, group, group_names, gap_size) {
   if (is.null(x)) {
     return(x)
   }
   stopifnot(length(x) == length(group))
+  stopifnot(max(group) == length(group_names))
   stopifnot(length(gap_size) == 1)
   class(x) <- c("grouped_limits", class(x))
   attr(x, "group") <- group
+  attr(x, "group_names") <- group_names
   attr(x, "gap_size") <- gap_size
   x
 }

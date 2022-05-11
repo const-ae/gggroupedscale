@@ -1,21 +1,24 @@
 Package: gggroupedscale
 Type: Package
 Title: Grouped Discrete Scale for 'ggplot2'
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: person("Constantin", "Ahlmann-Eltze", email = "artjom31415@googlemail.com", 
                   role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3762-068X"))
 Description: Discrete Scale for 'ggplot2' that have a gap between the groups.
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends:
     R (>= 2.10)
 Suggests: 
     testthat (>= 3.0.0),
-    palmerpenguins
+    palmerpenguins,
+    stringr
 Imports: 
     ggplot2 (>= 3.3.0),
     tibble,
     rlang,
-    scales
+    scales,
+    grid,
+    gtable
 Config/testthat/edition: 3

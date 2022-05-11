@@ -11,7 +11,8 @@ scale_x_grouped_discrete(
   gap_size = 0.3,
   expand = waiver(),
   guide = waiver(),
-  position = "bottom"
+  position = "bottom",
+  add_group_label = FALSE
 )
 
 scale_y_grouped_discrete(
@@ -94,6 +95,9 @@ expand the scale by 5\% on each side for continuous variables, and by
 
 \item{position}{For position scales, The position of the axis.
 \code{left} or \code{right} for y axes, \code{top} or \code{bottom} for x axes.}
+
+\item{add_group_label}{boolean whether the group is added as an extra line
+below the axis labels}
 }
 \description{
 A modified discrete scale that inserts a gap between groups
