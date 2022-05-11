@@ -55,7 +55,7 @@ guide_gengrob.grouped_axis <- function(guide, theme) {
   ggplot2:::absoluteGrob(
     grid::gList(axis_grobs, gt),
     width = gtable::gtable_width(gt),
-    height = axis_grobs$height + gtable::gtable_height(gt),
+    height = gtable::gtable_height(gt),
     vp = justvp
   )
 }
