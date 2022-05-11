@@ -9,6 +9,13 @@ test_that("multiplication works", {
       sapply(strsplit(x, split = "-"), function(.x) .x[1])
     }, gap_size = 0.8)
 
+  ggplot(peng, aes(x = bill_length_mm, y = group)) +
+    geom_point() +
+    scale_y_grouped_discrete(grouping = function(x){
+      sapply(strsplit(x, split = "-"), function(.x) .x[1])
+    }, gap_size = 0.8, add_group_label = TRUE)
+
+
   ggplot(peng, aes(x = group, y = bill_length_mm)) +
     geom_point() +
     scale_x_grouped_discrete(grouping = function(x){
@@ -60,6 +67,8 @@ test_that("multiplication works", {
     guide = guide_grouped_axis(angle = 90)) +
     cowplot::theme_minimal_grid() +
     theme_grouped_axis(axis.grouping.line = element_line(linetype = 2),
+                       axis.grouping.label = element_text(angle = 10, hjust = 0.5),
+                       axis.grouping.line_height = unit(30, "pt"),
                        axis.title.x = element_blank())
 })
 

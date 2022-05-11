@@ -26,7 +26,8 @@ NULL
 #'
 #'
 #' @export
-scale_x_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(), guide = waiver(), position = "bottom", add_group_label = FALSE) {
+scale_x_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(),
+                                     guide = waiver(), position = "bottom", add_group_label = FALSE) {
 
   if(add_group_label && inherits(guide, "waiver")){
     guide <- guide_grouped_axis()
@@ -48,14 +49,25 @@ scale_x_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0
 
 #' @rdname scale_x_grouped_discrete
 #' @export
-scale_y_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(), guide = waiver(), position = "left") {
+scale_y_grouped_discrete <- function(..., grouping = function(x) 1, gap_size = 0.3, expand = waiver(),
+                                     guide = waiver(), position = "left", add_group_label = FALSE) {
+
+  if(add_group_label && inherits(guide, "waiver")){
+    guide <- guide_grouped_axis()
+  }
+
   sc <- discrete_scale(c("y", "ymin", "ymax", "yend"), "position_d", identity, ...,
                        expand = expand, guide = guide, position = position, super = ScaleGroupedDiscretePosition)
 
   sc$range_c <- ggplot2:::continuous_range()
   sc$grouping <- grouping
   sc$gap_size <- gap_size
-  sc
+
+  if(add_group_label && inherits(guide, "waiver")){
+    list(sc, theme_grouped_axis())
+  }else{
+    sc
+  }
 }
 
 

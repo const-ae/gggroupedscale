@@ -11,14 +11,16 @@
 theme_grouped_axis <- function(
   axis.grouping.line = NULL,
   axis.grouping.line_padding = unit(20, "points"),
-  axis.grouping.label = NULL,
+  axis.grouping.label.x = NULL,
+  axis.grouping.label.y = NULL,
   axis.grouping.line_height = unit(20, "points"),
   ...
 ){
   theme(
     axis.grouping.line = axis.grouping.line,
     axis.grouping.line_padding = axis.grouping.line_padding,
-    axis.grouping.label = axis.grouping.label,
+    axis.grouping.label.x = axis.grouping.label.x,
+    axis.grouping.label.y = axis.grouping.label.y,
     axis.grouping.line_height = axis.grouping.line_height,
     ...,
     validate = FALSE
