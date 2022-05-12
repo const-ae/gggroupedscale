@@ -10,6 +10,11 @@
 extensions to easily group categorical variables without resorting to
 facets.
 
+For similar functionality, check out the
+[`guide_axis_nested`](https://teunbrand.github.io/ggh4x/reference/guide_axis_nested.html)
+function in the [ggh4x](https://teunbrand.github.io/ggh4x/index.html)
+package.
+
 ## Installation
 
 You can install the released version of gggroupedscale from
