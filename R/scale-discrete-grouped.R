@@ -100,7 +100,6 @@ ScaleGroupedDiscretePosition <- ggproto("ScaleGroupedDiscretePosition", ScaleDis
       # self$range$range can be NULL because non-discrete values use self$range_c
       self$limits %||% self$range$range %||% integer()
     }
-    # browser()
 
     groups <- if(is.vector(self$grouping)){
       rep_len(self$grouping, length(limits))
@@ -108,7 +107,7 @@ ScaleGroupedDiscretePosition <- ggproto("ScaleGroupedDiscretePosition", ScaleDis
       as_function(self$grouping)(limits)
     }
     stopifnot(length(groups) == 1 || length(groups) == length(limits))
-    num_groups <- as.numeric(as.factor(rep_len(groups, length(limits))))
+    num_groups <- as.numeric(droplevels(as.factor(rep_len(groups, length(limits)))))
 
     limits <- limits[order(num_groups)]
     group_names <- unique(groups[order(num_groups)])
