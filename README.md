@@ -6,6 +6,10 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+> :warning: This package is broken (R v4.2). Instead please use [ggh4x](https://teunbrand.github.io/ggh4x/index.html) and see https://github.com/teunbrand/ggh4x/issues/94 how to achieve the grouping behavior.
+> The remainder of this README is kept for reference.
+
+
 `gggroupedscale` is a [`ggplot2`](https://ggplot2.tidyverse.org/)
 extensions to easily group categorical variables without resorting to
 facets.
